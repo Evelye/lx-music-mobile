@@ -328,7 +328,25 @@ export const handleGetOnlineMusicUrl = async({ musicInfo, quality, onToggleSourc
   })
 }
 
-
+export const downloadMusic = (musicInfo: LX.Music.MusicInfoOnline)=>{
+  toast('开始下载...')
+  handleGetOnlineMusicUrl({
+    musicInfo: musicInfo,
+    isRefresh:false,
+    allowToggleSource: true,
+    onToggleSource:()=>{},
+  }).then(res=>{
+    return downloadMusicWithLrc({
+      url: res.url,
+      fileName: `${res.musicInfo.singer}-${res.musicInfo.name}`,
+      musicInfo
+    })
+  }).then(()=>{
+    toast('下载成功')
+  }).catch(()=>{
+    toast('获取下载地址失败')
+  })
+}
 export const getOnlineOtherSourcePicUrl = async({ musicInfos, onToggleSource, isRefresh, retryedSource = [] }: {
   musicInfos: LX.Music.MusicInfoOnline[]
   onToggleSource: (musicInfo?: LX.Music.MusicInfoOnline) => void
